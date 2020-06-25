@@ -24,56 +24,39 @@
 */
 
 
-#include "control.h"
+#include "filter.h"
 #include <math.h>
 
-#define TI_MIN 1e-15;
 
 
-int control_init_pictrl(pictrl_t* controller, float Kp, float Ti, float Ts){
-	controller->i_val = 0.0f;
-	controller->max = INFINITY;
-	controller->min = -INFINITY;
-
-	controller->kp = Kp;
-	if(Ti > 0.0f){
-		controller->ki = (Ts*Kp/Ti);		
+//1st order IIR (PT1) Filter with unity gain, design by time constant
+int filter_iir1_init(iir1_filter_t* filter, float tau, float Ts){
+	if(tau > 0.1* Ts){
+		filter->kf = 1.0f - exp(-Ts / tau);
 	}
-	else {
-		controller->ki = 0.0; //integrator off		
+	else{
+		filter->kf = 1.0f;
 	}
-
+	filter->out = 0.0f; //reset filter state
 	return(0);
 }
 
+//1st order IIR (PT1) Filter with unity gain, design by cutoff frequency
+int filter_iir1_init_fc(iir1_filter_t* filter, float fc, float Ts){
+	//TODO: Check for reasonable values of fc! -> Error handling
+	float tau = 1.0f/(2.0f*M_PI*fc);
+	return(filter_iir1_init(filter, tau, Ts));
+}
 
-float control_pictrl(pictrl_t* controller, float ref, float act){
+//1st order IIR (PT1) Filter, reset to certain value
+void filter_iir1_reset(iir1_filter_t* filter, float val){
+	filter->out = val;
+}
 
-	float ctrldiff;
-	float p_val, i_val;
-	float out;
-
-	ctrldiff = (ref - act);
-	p_val = controller->kp * ctrldiff;
-	if(controller->ki){	
-		i_val = controller->ki * ctrldiff + controller->i_val;
-	}
-	else {
-		i_val = 0.0f;
-	}
-
-	out = p_val + i_val;	
-	
-	if(out > controller->max){
-		out = controller->max;
-        	i_val = controller->max - p_val;
-    	}
-    	if(out < controller->min){
-        	out = controller->min;
-		i_val = controller->min - p_val;
-    	}    
-	
-	controller->i_val = i_val;
+//1st order IIR (PT1) Filter with unity gain
+float filter_iir1(iir1_filter_t* filter, float in){
+	float out = filter->kf * (in - filter->out);
+	filter->out = out;
 	return(out);
 }
 

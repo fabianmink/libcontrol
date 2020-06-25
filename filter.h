@@ -24,57 +24,18 @@
 */
 
 
-#include "control.h"
-#include <math.h>
-
-#define TI_MIN 1e-15;
-
-
-int control_init_pictrl(pictrl_t* controller, float Kp, float Ti, float Ts){
-	controller->i_val = 0.0f;
-	controller->max = INFINITY;
-	controller->min = -INFINITY;
-
-	controller->kp = Kp;
-	if(Ti > 0.0f){
-		controller->ki = (Ts*Kp/Ti);		
-	}
-	else {
-		controller->ki = 0.0; //integrator off		
-	}
-
-	return(0);
-}
+typedef struct
+{
+  float kf;     //  Filter constant
+  float out;    //  Filter last output = internal state
+} iir1_filter_t;
 
 
-float control_pictrl(pictrl_t* controller, float ref, float act){
-
-	float ctrldiff;
-	float p_val, i_val;
-	float out;
-
-	ctrldiff = (ref - act);
-	p_val = controller->kp * ctrldiff;
-	if(controller->ki){	
-		i_val = controller->ki * ctrldiff + controller->i_val;
-	}
-	else {
-		i_val = 0.0f;
-	}
-
-	out = p_val + i_val;	
-	
-	if(out > controller->max){
-		out = controller->max;
-        	i_val = controller->max - p_val;
-    	}
-    	if(out < controller->min){
-        	out = controller->min;
-		i_val = controller->min - p_val;
-    	}    
-	
-	controller->i_val = i_val;
-	return(out);
-}
+//1st order IIR (PT1) Filter, design by time constant
+int filter_init_iir1(iir1_filter_t* filter, float tau, float Ts);
+//1st order IIR (PT1) Filter, design by cutoff frequency
+extern int filter_init_iir1_fc(iir1_filter_t* filter, float fc, float Ts);
+//1st order IIR (PT1) Filter
+extern float filter_iir1(iir1_filter_t* filter, float in);
 
 
