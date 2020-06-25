@@ -1,0 +1,21 @@
+control:
+- add P(I)D Controller
+- improved limitation / anti-windup
+- 2D- PI controller, e.g. for dq-Current control of electrical motors
+
+filter:
+- Higher order IIR Filter, e.g. biquad (SOS)-Filters
+
+interpolation:
+- initialisation functions
+- documentation
+
+identification:
+- add identification library
+(LS, RLS, ...)
+
+
+
+
+
+
