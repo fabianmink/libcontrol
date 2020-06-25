@@ -27,10 +27,9 @@
 #include "control.h"
 #include <math.h>
 
-#define TI_MIN 1e-15;
 
 
-int control_init_pictrl(pictrl_t* controller, float Kp, float Ti, float Ts){
+int control_pictrl_init(pictrl_t* controller, float Kp, float Ti, float Ts){
 	controller->i_val = 0.0f;
 	controller->max = INFINITY;
 	controller->min = -INFINITY;

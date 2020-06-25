@@ -33,7 +33,7 @@ typedef struct
   float i_val;    //  current integral value
 } pictrl_t;
 
-extern int control_init_pictrl(pictrl_t* controller, float Kp, float Ti, float Ts);
+extern int control_pictrl_init(pictrl_t* controller, float Kp, float Ti, float Ts);
 extern float control_pictrl(pictrl_t* controller, float ref, float act);
 
 
