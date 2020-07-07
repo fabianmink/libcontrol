@@ -33,7 +33,21 @@ typedef struct
   float i_val;    //  current integral value
 } pictrl_t;
 
+
+typedef struct
+{
+  float kp;       //  P-Gain
+  float kd;       //  D-Gain
+  float min;      //  lower output limit
+  float max;      //  upper output limit
+  float diff_n1;  //  last ctrldiff value
+} pdctrl_t;
+
 extern int control_pictrl_init(pictrl_t* controller, float Kp, float Ti, float Ts);
 extern float control_pictrl(pictrl_t* controller, float ref, float act);
+
+
+extern int control_pdctrl_init(pdctrl_t* controller, float Kp, float Td, float Ts);
+extern float control_pdctrl(pdctrl_t* controller, float ref, float act);
 
 

@@ -21,7 +21,7 @@
   ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 
 #include "control.h"
@@ -62,18 +62,67 @@ float control_pictrl(pictrl_t* controller, float ref, float act){
 	}
 
 	out = p_val + i_val;	
-	
+
 	if(out > controller->max){
 		out = controller->max;
-        	i_val = controller->max - p_val;
-    	}
-    	if(out < controller->min){
-        	out = controller->min;
+		i_val = controller->max - p_val;
+	}
+	if(out < controller->min){
+		out = controller->min;
 		i_val = controller->min - p_val;
-    	}    
-	
+	}
+
 	controller->i_val = i_val;
 	return(out);
 }
 
+int control_pdctrl_init(pdctrl_t* controller, float Kp, float Td, float Ts){
+	controller->diff_n1 = NAN;
+	controller->max = INFINITY;
+	controller->min = -INFINITY;
 
+	controller->kp = Kp;
+	if(Ts > 0.0f){
+		controller->kd = (Td*Kp/Ts);
+	}
+	else {
+		controller->kd = 0.0; //derivative off
+	}
+
+	return(0);
+}
+
+
+float control_pdctrl(pdctrl_t* controller, float ref, float act){
+	float ctrldiff;
+	float p_val, d_val;
+	float out;
+
+
+	ctrldiff = (ref - act);
+
+	//initialize
+	if(controller->diff_n1 == NAN){
+		controller->diff_n1 = ctrldiff;
+	}
+
+	p_val = controller->kp * ctrldiff;
+	if(controller->kd){
+		d_val = controller->kd * (ctrldiff - controller->diff_n1);
+	}
+	else {
+		d_val = 0.0f;
+	}
+
+	out = p_val + d_val;
+
+	if(out > controller->max){
+		out = controller->max;
+	}
+	if(out < controller->min){
+		out = controller->min;
+	}
+
+	controller->diff_n1 = ctrldiff;
+	return(out);
+}
