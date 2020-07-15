@@ -126,3 +126,38 @@ float control_pdctrl(pdctrl_t* controller, float ref, float act){
 	controller->diff_n1 = ctrldiff;
 	return(out);
 }
+
+
+float control_pdt1ctrl(pdt1ctrl_t* controller, float ref, float act){
+	float ctrldiff;
+	float p_val, d_val;
+	float out;
+
+	ctrldiff = (ref - act);
+
+	//initialize
+	if(controller->diff_n1 == NAN){
+		controller->diff_n1 = ctrldiff;
+		filter_iir1_reset(&(controller->filter), 0.0f);
+	}
+
+	p_val = controller->kp * ctrldiff;
+	if(controller->kd){
+		d_val = controller->kd * filter_iir1(&(controller->filter), (ctrldiff - controller->diff_n1));;
+	}
+	else {
+		d_val = 0.0f;
+	}
+
+	out = p_val + d_val;
+
+	if(out > controller->max){
+		out = controller->max;
+	}
+	if(out < controller->min){
+		out = controller->min;
+	}
+
+	controller->diff_n1 = ctrldiff;
+	return(out);
+}

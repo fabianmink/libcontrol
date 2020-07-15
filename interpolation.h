@@ -24,6 +24,9 @@
 */
 
 
+#ifndef __INTERPOLATION_H
+#define __INTERPOLATION_H
+
 typedef struct
 {
 	int nb;              // number of data points
@@ -43,4 +46,4 @@ typedef struct
 	float* val;          // pointer to data values, array size must be nbx * nby
 } lin2_data_t;
 
-
+#endif /* __INTERPOLATION_H */

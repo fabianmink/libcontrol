@@ -23,6 +23,8 @@
   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#ifndef __FILTER_H
+#define __FILTER_H
 
 typedef struct
 {
@@ -32,10 +34,13 @@ typedef struct
 
 
 //1st order IIR (PT1) Filter, design by time constant
-int filter_init_iir1(iir1_filter_t* filter, float tau, float Ts);
+extern int filter_init_iir1(iir1_filter_t* filter, float tau, float Ts);
 //1st order IIR (PT1) Filter, design by cutoff frequency
 extern int filter_init_iir1_fc(iir1_filter_t* filter, float fc, float Ts);
+//1st order IIR (PT1) Filter, reset to certain value
+extern void filter_iir1_reset(iir1_filter_t* filter, float val);
 //1st order IIR (PT1) Filter
 extern float filter_iir1(iir1_filter_t* filter, float in);
 
 
+#endif /* __FILTER_H */

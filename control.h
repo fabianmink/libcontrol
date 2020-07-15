@@ -23,6 +23,10 @@
   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#ifndef __CONTROL_H
+#define __CONTROL_H
+
+#include "filter.h"
 
 typedef struct
 {
@@ -43,6 +47,16 @@ typedef struct
   float diff_n1;  //  last ctrldiff value
 } pdctrl_t;
 
+typedef struct
+{
+  float kp;       //  P-Gain
+  float kd;       //  D-Gain
+  iir1_filter_t filter;  //  1st order filter   
+  float min;      //  lower output limit
+  float max;      //  upper output limit
+  float diff_n1;  //  last ctrldiff value  
+} pdt1ctrl_t;
+
 extern int control_pictrl_init(pictrl_t* controller, float Kp, float Ti, float Ts);
 extern float control_pictrl(pictrl_t* controller, float ref, float act);
 
@@ -50,4 +64,4 @@ extern float control_pictrl(pictrl_t* controller, float ref, float act);
 extern int control_pdctrl_init(pdctrl_t* controller, float Kp, float Td, float Ts);
 extern float control_pdctrl(pdctrl_t* controller, float ref, float act);
 
-
+#endif /* __CONTROL_H */
