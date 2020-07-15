@@ -36,7 +36,7 @@ typedef struct
 //1st order IIR (PT1) Filter, design by time constant
 extern int filter_iir1_init(iir1_filter_t* filter, float tau, float Ts);
 //1st order IIR (PT1) Filter with unity gain, design by cutoff frequency
-extern filter_iir1_init_fc(iir1_filter_t* filter, float fc, float Ts);
+extern int filter_iir1_init_fc(iir1_filter_t* filter, float fc, float Ts);
 
 //1st order IIR (PT1) Filter, reset to certain value
 extern void filter_iir1_reset(iir1_filter_t* filter, float val);
