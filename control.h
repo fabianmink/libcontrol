@@ -60,8 +60,10 @@ typedef struct
 extern int control_pictrl_init(pictrl_t* controller, float Kp, float Ti, float Ts);
 extern float control_pictrl(pictrl_t* controller, float ref, float act);
 
-
 extern int control_pdctrl_init(pdctrl_t* controller, float Kp, float Td, float Ts);
 extern float control_pdctrl(pdctrl_t* controller, float ref, float act);
+
+extern int control_pdctrl_init(pdt1ctrl_t* controller, float Kp, float Td, float T1, float Ts);
+extern float control_pdt1ctrl(pdt1ctrl_t* controller, float ref, float act);
 
 #endif /* __CONTROL_H */

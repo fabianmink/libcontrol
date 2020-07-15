@@ -25,6 +25,7 @@
 
 
 #include "control.h"
+#include "filter.h"
 #include <math.h>
 
 
@@ -125,6 +126,23 @@ float control_pdctrl(pdctrl_t* controller, float ref, float act){
 
 	controller->diff_n1 = ctrldiff;
 	return(out);
+}
+
+int control_pdt1ctrl_init(pdt1ctrl_t* controller, float Kp, float Td, float T1, float Ts){
+	controller->diff_n1 = NAN;
+	controller->max = INFINITY;
+	controller->min = -INFINITY;
+
+	controller->kp = Kp;
+	if(Ts > 0.0f){
+		controller->kd = (Td*Kp/Ts);
+	}
+	else {
+		controller->kd = 0.0; //derivative off
+	}
+	filter_iir1_init(&(controller->filter), T1, Ts);
+
+	return(0);
 }
 
 
