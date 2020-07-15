@@ -103,7 +103,7 @@ float control_pdctrl(pdctrl_t* controller, float ref, float act){
 	ctrldiff = (ref - act);
 
 	//initialize
-	if(controller->diff_n1 == NAN){
+	if(isnan(controller->diff_n1)){
 		controller->diff_n1 = ctrldiff;
 	}
 
@@ -154,7 +154,7 @@ float control_pdt1ctrl(pdt1ctrl_t* controller, float ref, float act){
 	ctrldiff = (ref - act);
 
 	//initialize
-	if(controller->diff_n1 == NAN){
+	if(isnan(controller->diff_n1)){
 		controller->diff_n1 = ctrldiff;
 		filter_iir1_reset(&(controller->filter), 0.0f);
 	}
