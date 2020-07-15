@@ -54,10 +54,9 @@ void filter_iir1_reset(iir1_filter_t* filter, float val){
 }
 
 //1st order IIR (PT1) Filter with unity gain
-float filter_iir1(iir1_filter_t* filter, float in){
-	float out = filter->kf * (in - filter->out);
-	filter->out = out;
-	return(out);
+float filter_iir1(iir1_filter_t* filter, float in){ 
+	filter->out += filter->kf * (in - filter->out);
+	return(filter->out);
 }
 
 
