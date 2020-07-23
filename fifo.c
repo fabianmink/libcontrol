@@ -21,67 +21,67 @@
   ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 #include "fifo.h"
 
 int fifo_uint8Write(uint8Fifo_t* fifo, uint8_t* value){
-  int fill = (fifo->writePointer - fifo->readPointer);
+	int fill = (fifo->writePointer - fifo->readPointer);
 
-  if(fill < 0) fill += (fifo->size);
-  if(fill >= fifo->size) fill -= (fifo->size);
+	if(fill < 0) fill += (fifo->size);
+	if(fill >= fifo->size) fill -= (fifo->size);
 
-  if(fill == (fifo->size-1)) return(-1); //Fifo full (one element remains unused)
+	if(fill == (fifo->size-1)) return(-1); //Fifo full (one element remains unused)
 
-  fifo->buffer[fifo->writePointer] = *value;
+	fifo->buffer[fifo->writePointer] = *value;
 
-  //Write pointer inc
-  fifo->writePointer++;
-  if(fifo->writePointer == fifo->size) fifo->writePointer = 0;
+	//Write pointer inc
+	fifo->writePointer++;
+	if(fifo->writePointer == fifo->size) fifo->writePointer = 0;
 
-  //(fifo->size-1): Max number of elements
-  //fill: grade of filling (currently written element not counted)
-  return((fifo->size-1)-fill-1); //no of available elements
+	//(fifo->size-1): Max number of elements
+	//fill: grade of filling (currently written element not counted)
+	return((fifo->size-1)-fill-1); //no of available elements
 }
 
 int fifo_uint8Read(uint8Fifo_t* fifo, uint8_t* value){
-  int fill = (fifo->writePointer - fifo->readPointer);
+	int fill = (fifo->writePointer - fifo->readPointer);
 
-  if(fill < 0) fill += (fifo->size); 
-  if(fill >= fifo->size) fill -= (fifo->size);
+	if(fill < 0) fill += (fifo->size);
+	if(fill >= fifo->size) fill -= (fifo->size);
 
-  if(fill == 0) return(-1); //Fifo empty
+	if(fill == 0) return(-1); //Fifo empty
 
-  //read val
-  *value = fifo->buffer[fifo->readPointer];
+	//read val
+	*value = fifo->buffer[fifo->readPointer];
 
-  //Read pointer inc
-  fifo->readPointer++;
-  if(fifo->readPointer == fifo->size) fifo->readPointer = 0;
+	//Read pointer inc
+	fifo->readPointer++;
+	if(fifo->readPointer == fifo->size) fifo->readPointer = 0;
 
-  return(fill-1);
+	return(fill-1);
 }
 
 int fifo_uint8IsEmpty(uint8Fifo_t* fifo){
-  int fill = (fifo->writePointer - fifo->readPointer);
-  if(fill >= fifo->size) fill -= (fifo->size);
-  if(fill == 0) return(1);
+	int fill = (fifo->writePointer - fifo->readPointer);
+	if(fill >= fifo->size) fill -= (fifo->size);
+	if(fill == 0) return(1);
 
-  return(0);
+	return(0);
 }
 
 int fifo_uint8IsFull(uint8Fifo_t* fifo){
-  int fill = (fifo->writePointer - fifo->readPointer);
-  if(fill < 0) fill += (fifo->size);
-  if(fill == (fifo->size-1)) return(1); //Fifo full (one element remains unused)
+	int fill = (fifo->writePointer - fifo->readPointer);
+	if(fill < 0) fill += (fifo->size);
+	if(fill == (fifo->size-1)) return(1); //Fifo full (one element remains unused)
 
-  return(0);
+	return(0);
 }
 
 int fifo_uint8GetFill(uint8Fifo_t* fifo){
-  int fill = (fifo->writePointer - fifo->readPointer);
-  if(fill < 0) fill += (fifo->size);
-  return(fill);
+	int fill = (fifo->writePointer - fifo->readPointer);
+	if(fill < 0) fill += (fifo->size);
+	return(fill);
 }
 
 int fifo_uint8GetRemain(uint8Fifo_t* fifo){
@@ -90,6 +90,6 @@ int fifo_uint8GetRemain(uint8Fifo_t* fifo){
 }
 
 int fifo_uint8Clear(uint8Fifo_t* fifo){
-  fifo->readPointer = fifo->writePointer;
-  return(0);
+	fifo->readPointer = fifo->writePointer;
+	return(0);
 }
