@@ -57,6 +57,18 @@ typedef struct
   float diff_n1;  //  last ctrldiff value  
 } pdt1ctrl_t;
 
+typedef struct
+{
+  float kp;       //  P-Gain
+  float ki;       //  I-Gain
+  float kd;       //  D-Gain
+  iir1_filter_t filter;  //  1st order filter
+  float min;      //  lower output limit
+  float max;      //  upper output limit
+  float i_val;    //  current integral value
+  float diff_n1;  //  last ctrldiff value
+} pidt1ctrl_t;
+
 extern int control_pictrl_init(pictrl_t* controller, float Kp, float Ti, float Ts);
 extern float control_pictrl(pictrl_t* controller, float ref, float act);
 
@@ -66,4 +78,6 @@ extern float control_pdctrl(pdctrl_t* controller, float ref, float act);
 extern int control_pdt1ctrl_init(pdt1ctrl_t* controller, float Kp, float Td, float T1, float Ts);
 extern float control_pdt1ctrl(pdt1ctrl_t* controller, float ref, float act);
 
+extern int control_pidt1ctrl_init(pidt1ctrl_t* controller, float Kp, float Ti, float Td, float T1, float Ts);
+extern float control_pidt1ctrl(pidt1ctrl_t* controller, float ref, float act);
 #endif /* __CONTROL_H */

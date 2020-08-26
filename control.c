@@ -179,3 +179,79 @@ float control_pdt1ctrl(pdt1ctrl_t* controller, float ref, float act){
 	controller->diff_n1 = ctrldiff;
 	return(out);
 }
+
+int control_pidt1ctrl_init(pidt1ctrl_t* controller, float Kp, float Ti, float Td, float T1, float Ts){
+	controller->i_val = 0.0f;
+	controller->diff_n1 = NAN;
+	controller->max = INFINITY;
+	controller->min = -INFINITY;
+
+	controller->kp = Kp;
+	if(Ti > 0.0f){
+		controller->ki = (Ts*Kp/Ti);
+	}
+	else {
+		controller->ki = 0.0; //integrator off
+	}
+	if(Ts > 0.0f){
+		controller->kd = (Td*Kp/Ts);
+	}
+	else {
+		controller->kd = 0.0; //derivative off
+	}
+	filter_iir1_init(&(controller->filter), T1, Ts);
+
+	return(0);
+}
+
+
+
+float control_pidt1ctrl(pidt1ctrl_t* controller, float ref, float act){
+	float ctrldiff;
+	float p_val, i_val, d_val;
+	float out;
+
+	ctrldiff = (ref - act);
+
+	//initialize
+	if(isnan(controller->diff_n1)){
+		controller->diff_n1 = ctrldiff;
+		filter_iir1_reset(&(controller->filter), 0.0f);
+	}
+
+	p_val = controller->kp * ctrldiff;
+	if(controller->ki){
+		i_val = controller->ki * ctrldiff + controller->i_val;
+	}
+	else {
+		i_val = 0.0f;
+	}
+	//if(controller->kd){
+		d_val = controller->kd * filter_iir1(&(controller->filter), (ctrldiff - controller->diff_n1));;
+	//}
+	//else {
+	//	d_val = 0.0f;
+	//}
+
+	out = p_val + i_val + d_val;
+
+	if(out > controller->max){
+		out = controller->max;
+		if(i_val > controller->i_val){
+			i_val = controller->i_val;
+		}
+		//i_val = controller->max - (p_val+d_val);
+	}
+	if(out < controller->min){
+		out = controller->min;
+		if(i_val < controller->i_val){
+			i_val = controller->i_val;
+		}
+		//i_val = controller->min - (p_val+d_val);
+	}
+	controller->i_val = i_val;
+
+	controller->diff_n1 = ctrldiff;
+	return(out);
+}
+
