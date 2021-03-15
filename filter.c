@@ -32,7 +32,7 @@
 //1st order IIR (PT1) Filter with unity gain, design by time constant
 int filter_iir1_init(iir1_filter_t* filter, float tau, float Ts){
 	if(tau > 0.1* Ts){
-		filter->kf = 1.0f - exp(-Ts / tau);
+		filter->kf = 1.0f - expf(-Ts / tau);
 	}
 	else{
 		filter->kf = 1.0f;
