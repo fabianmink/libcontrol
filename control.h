@@ -71,6 +71,7 @@ typedef struct
 
 extern int control_pictrl_init(pictrl_t* controller, float Kp, float Ti, float Ts);
 extern float control_pictrl(pictrl_t* controller, float ref, float act);
+extern float control_pictrl2(pictrl_t* controller, float ref, float act); //alternative anti-windup strategy
 
 extern int control_pdctrl_init(pdctrl_t* controller, float Kp, float Td, float Ts);
 extern float control_pdctrl(pdctrl_t* controller, float ref, float act);

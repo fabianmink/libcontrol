@@ -77,6 +77,37 @@ float control_pictrl(pictrl_t* controller, float ref, float act){
 	return(out);
 }
 
+//Different Anti-Windup strategy compared to control_pictrl
+float control_pictrl2(pictrl_t* controller, float ref, float act){
+
+	float ctrldiff;
+	float p_val, i_val;
+	float out;
+
+	ctrldiff = (ref - act);
+	p_val = controller->kp * ctrldiff;
+	if(controller->ki){	
+		i_val = controller->ki * ctrldiff + controller->i_val;
+	}
+	else {
+		i_val = 0.0f;
+	}
+
+	out = p_val + i_val;	
+
+	if(out > controller->max){
+		out = controller->max;
+		if(i_val > controller->i_val) i_val = controller->i_val;
+	}
+	if(out < controller->min){
+		out = controller->min;
+		if(i_val < controller->i_val) i_val = controller->i_val;
+	}
+
+	controller->i_val = i_val;
+	return(out);
+}
+
 int control_pdctrl_init(pdctrl_t* controller, float Kp, float Td, float Ts){
 	controller->diff_n1 = NAN;
 	controller->max = INFINITY;
