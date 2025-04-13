@@ -3,7 +3,7 @@
 
 
 int16_t  val[]      = {100, 200, 500, 600, 400, 400, -600, -400, -300};
-uint32_t deltapos[] = {  1,   1,   3,   0,  10,   0,   10,   20,   20};
+uint32_t deltapos[] = {  1,   1,   3,   1,  10,   0,   10,   20,    0};
 
 pgenerator_lin_int16_data_t myInterp = {
 	.numpos = 9,
@@ -18,9 +18,11 @@ int main(void){
 	
 	FILE *file = fopen("out.csv", "w");
 	
-	printf("Hello\n");
 	
-	for(int i = 0; i<100; i++){
+	int len = pgenerator_lin_int16_totalLen(&myInterp);
+	printf("Total lenght: %i\n", len);
+	
+	for(int i = 0; i<70; i++){
 		out = pgenerator_lin_int16(&myInterp);
 		printf("%05i:  %05i  -   cnt:%05i, pos:%05i\n", i, out, myInterp.cnt, myInterp.pos);
 		//printf("%05i, %05i\n", i, out);
