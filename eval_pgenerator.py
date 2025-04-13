@@ -16,8 +16,12 @@ data = np.genfromtxt('out.csv', delimiter=',')
 pos = data[:,0]
 val = data[:,1]
 
-plt.plot(pos,val,'kx-')
 
+fig, (ax) = plt.subplots(1, 1)
+
+ax.plot(pos,val,'rx-')
+
+ax.grid(1)
 
 plt.show()
 
