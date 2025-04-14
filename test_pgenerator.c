@@ -15,16 +15,18 @@ pgenerator_lin_int16_data_t myInterp = {
 
 int main(void){
 	int16_t out;
+	int end;
 	
 	FILE *file = fopen("out.csv", "w");
 	
 	
 	int len = pgenerator_lin_int16_totalLen(&myInterp);
 	printf("Total lenght: %i\n", len);
+
 	
 	for(int i = 0; i<70; i++){
-		out = pgenerator_lin_int16(&myInterp);
-		printf("%05i:  %05i  -   cnt:%05i, pos:%05i\n", i, out, myInterp.cnt, myInterp.pos);
+		end = pgenerator_lin_int16(&myInterp, &out);
+		printf("%05i:  %05i  -   cnt:%05i, pos:%05i, end:%01i\n", i, out, myInterp.cnt, myInterp.pos, end);
 		//printf("%05i, %05i\n", i, out);
 		fprintf(file, "%05i, %05i\n", i, out);
 	}
